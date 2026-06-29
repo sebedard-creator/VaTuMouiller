@@ -177,6 +177,17 @@ class DebugActivity : AppCompatActivity() {
                     log("H+4 (Dans 4h) : ${forecast.h4}% de précipitation")
                     log("Source : ${if (forecast.isCached) "Cache" else "Réseau (Moyenne des API fonctionnelles)"}")
                     log("Mis à jour à : $timeStr")
+                    
+                    // Forcer la mise à jour immédiate du widget Glance pour refléter les nouvelles données
+                    try {
+                        val glanceIds = GlanceAppWidgetManager(this@DebugActivity)
+                            .getGlanceIds(WeatherWidget::class.java)
+                        glanceIds.forEach { glanceId ->
+                            WeatherWidget().update(this@DebugActivity, glanceId)
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
                 },
                 onFailure = { error ->
                     log("--- ÉCHEC ---")

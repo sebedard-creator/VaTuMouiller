@@ -90,11 +90,18 @@ class WeatherRepository(
         val targetH3 = currentHourMs + 3 * 3600 * 1000
         val targetH4 = currentHourMs + 4 * 3600 * 1000
 
-        val p0 = calculateConsensus(targetH0, openMeteoRes, tomorrowRes, openWeatherRes)
-        val p1 = calculateConsensus(targetH1, openMeteoRes, tomorrowRes, openWeatherRes)
-        val p2 = calculateConsensus(targetH2, openMeteoRes, tomorrowRes, openWeatherRes)
-        val p3 = calculateConsensus(targetH3, openMeteoRes, tomorrowRes, openWeatherRes)
-        val p4 = calculateConsensus(targetH4, openMeteoRes, tomorrowRes, openWeatherRes)
+        var p0 = calculateConsensus(targetH0, openMeteoRes, tomorrowRes, openWeatherRes)
+        var p1 = calculateConsensus(targetH1, openMeteoRes, tomorrowRes, openWeatherRes)
+        var p2 = calculateConsensus(targetH2, openMeteoRes, tomorrowRes, openWeatherRes)
+        var p3 = calculateConsensus(targetH3, openMeteoRes, tomorrowRes, openWeatherRes)
+        var p4 = calculateConsensus(targetH4, openMeteoRes, tomorrowRes, openWeatherRes)
+
+        // Lissage : si une API a déjà purgé l'heure courante de son flux (ex: à 11:48, l'heure de 11:00 disparaît)
+        if (p0 == null) p0 = p1
+        if (p1 == null) p1 = p2
+        if (p2 == null) p2 = p3
+        if (p3 == null) p3 = p4
+        if (p4 == null) p4 = p3
 
         if (p0 != null && p1 != null && p2 != null && p3 != null && p4 != null) {
             // Pondération : minutes restantes dans l'heure courante vs minutes écoulées dans la suivante
@@ -170,9 +177,9 @@ class WeatherRepository(
 
         for (i in times.indices) {
             try {
-                // Open-Meteo local time format: "2026-06-28T14:00"
+                // Open-Meteo UTC time format: "2026-06-28T14:00" (grâce au paramètre timezone=UTC)
                 val ldt = LocalDateTime.parse(times[i])
-                val timeMs = ldt.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                val timeMs = ldt.atZone(java.time.ZoneOffset.UTC).toInstant().toEpochMilli()
                 val diff = abs(timeMs - targetMs)
                 // Tolérer une différence d'au plus 45 minutes par rapport à la cible
                 if (diff < minDiff && diff < 45 * 60 * 1000) {

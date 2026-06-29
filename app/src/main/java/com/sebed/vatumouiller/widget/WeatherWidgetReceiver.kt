@@ -42,7 +42,7 @@ class WeatherWidgetReceiver : GlanceAppWidgetReceiver() {
 
             WorkManager.getInstance(context).enqueueUniquePeriodicWork(
                 WORK_NAME,
-                ExistingPeriodicWorkPolicy.KEEP,
+                ExistingPeriodicWorkPolicy.UPDATE,
                 workRequest
             )
         } catch (e: Exception) {

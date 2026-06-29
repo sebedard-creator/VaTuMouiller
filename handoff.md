@@ -24,9 +24,10 @@ Ce document résume le travail accompli, l'état actuel du projet, et définit l
 
 ## 2. État actuel
 *   **Statut** : Le projet compile, s'installe et s'exécute parfaitement.
-*   **DebugActivity** : Affiche un panneau complet gérant les permissions GPS, déclenchant les requêtes et affichant désormais le statut de réussite/échec et l'erreur système exacte pour chacun des 3 services météo testés.
-*   **Widget Glance** : Se charge et s'affiche sans erreur sur Nova Launcher. Les prévisions horaires H+1 à H+4 s'adaptent dynamiquement à la taille du widget (2x1, 3x1, 4x1) et grossissent pour remplir l'espace.
-*   **API OpenWeatherMap** : Migrée vers la version 4.0 (`data/4.0/onecall/timeline/1h`). Les nouvelles clés souscrites sur l'abonnement "One Call API 4.0" sont désormais prises en charge.
+*   **DebugActivity** : Affiche un panneau complet gérant les permissions GPS, déclenchant les requêtes et affichant désormais le statut de réussite/échec et l'erreur système exacte pour chacun des 3 services météo testés. De plus, un succès manuel déclenche le rafraîchissement immédiat du widget.
+*   **Widget Glance** : Se charge et s'affiche sans erreur sur Nova Launcher. Les prévisions H+1 à H+4 s'adaptent à la taille et l'opacité est réglable. L'intervalle de 15 minutes a été forcé dans WorkManager via la politique `UPDATE`.
+*   **API OpenWeatherMap & Open-Meteo** : OpenWeatherMap migré vers 4.0. Le timezone bug d'Open-Meteo (faille de fuseau horaire) a été corrigé en forçant le format UTC universel.
+
 
 ---
 

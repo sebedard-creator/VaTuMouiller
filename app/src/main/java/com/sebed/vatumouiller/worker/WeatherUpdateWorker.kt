@@ -19,13 +19,26 @@ class WeatherUpdateWorker(
 
         // Récupérer la position géographique courante
         val location = locationHelper.getCurrentLocation()
-        if (location == null) {
-            // Tente de s'exécuter à nouveau plus tard si le GPS est temporairement inaccessible
-            return Result.retry()
+        val lat: Double
+        val lon: Double
+        if (location != null) {
+            lat = location.latitude
+            lon = location.longitude
+            // Sauvegarder la position GPS valide pour un usage ultérieur en arrière-plan
+            val prefs = applicationContext.getSharedPreferences("weather_prefs", Context.MODE_PRIVATE)
+            prefs.edit()
+                .putFloat("last_gps_lat", lat.toFloat())
+                .putFloat("last_gps_lon", lon.toFloat())
+                .apply()
+        } else {
+            // Récupérer la dernière position GPS enregistrée, sinon Montréal par défaut
+            val prefs = applicationContext.getSharedPreferences("weather_prefs", Context.MODE_PRIVATE)
+            lat = prefs.getFloat("last_gps_lat", 45.5017f).toDouble()
+            lon = prefs.getFloat("last_gps_lon", -73.5673f).toDouble()
         }
 
         // Interroger les 3 API météo et mettre à jour le cache
-        val result = repository.getForecast(location.latitude, location.longitude)
+        val result = repository.getForecast(lat, lon)
         
         return if (result.isSuccess) {
             // Forcer le widget Glance à se redessiner avec les nouvelles données du cache

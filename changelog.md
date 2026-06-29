@@ -33,8 +33,8 @@ Toutes les modifications notables apportées à ce projet seront consignées dan
 - Ajout de retours visuels détaillés (succès/échecs et messages d'erreur système) pour chacun des 3 services météo dans le panneau de débogage de l'application.
 - Correction d'une erreur HTTP 400 sur Open-Meteo en supprimant le paramètre restrictif `models=gem_hrdps` (qui n'expose pas directement le champ `precipitation_probability` sur la grille brute et restreint l'usage hors Amérique du Nord) pour utiliser par défaut le mode intelligent `best_match` d'Open-Meteo.
 - Modification stylistique du widget : regroupement des prévisions et du footer "Mis à jour à" dans une même colonne centrée pour les rapprocher verticalement, et retrait de l'effet gras (`FontWeight.Bold`) sur le texte des pourcentages.
-
-
-
-
-
+- Correction majeure du flux de consensus : ajout d'une logique de lissage pour empêcher le blocage complet des mises à jour réseau lorsque les API météo purgent la première heure (H0) de leur timeline en fin d'heure (ex: requêtes à 11h48 causant le rejet de l'heure cible de 11h00).
+- Ajout d'une tolérance de localisation en arrière-plan dans le Worker : si le GPS n'est pas accessible en tâche de fond (permissions restrictives d'Android, tunnel, etc.), le Worker utilise la dernière position GPS enregistrée avec succès (ou Montréal par défaut) pour forcer la mise à jour des données météo plutôt que de renvoyer un échec.
+- Résolution finale de la faille de fuseau horaire (Timezone Bug) sur Open-Meteo : modification de l'appel d'API pour forcer le retour en UTC et parsing des résultats en UTC absolu. Cela garantit le fonctionnement d'Open-Meteo sur les émulateurs (souvent réglés en UTC/PST) et élimine les blocages de mise à jour quand Tomorrow.io et OpenWeatherMap atteignent leurs limites de requêtes.
+- Correction de la politique de planification du Worker : remplacement de `ExistingPeriodicWorkPolicy.KEEP` par `ExistingPeriodicWorkPolicy.UPDATE` dans `WeatherWidgetReceiver.kt` et déportation de la planification dans la classe `VaTuMouillerApplication.kt` pour forcer le système à enregistrer notre nouvel intervalle de 15 minutes, même si le widget est déjà présent sur l'écran d'accueil lors de l'installation de la mise à jour de l'application.
+- Déclenchement de la mise à jour immédiate du widget Glance depuis `DebugActivity.kt` lors d'une exécution de test manuelle réussie, évitant que le widget ne reste figé sur l'écran d'accueil alors que le cache a été actualisé.

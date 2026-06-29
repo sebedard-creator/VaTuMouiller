@@ -11,6 +11,6 @@ interface OpenMeteoApi {
         @Query("longitude") longitude: Double,
         @Query("hourly") hourly: String = "precipitation_probability",
         @Query("forecast_days") forecastDays: Int = 1,
-        @Query("timezone") timezone: String = "auto"
+        @Query("timezone") timezone: String = "UTC"
     ): OpenMeteoResponse
 }
