@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">VaTuMouiller</string>
+    <string name="widget_name">VaTuMouiller Widget</string>
+    <string name="widget_description">Affiche la probabilité de précipitation pour les 3 prochaines heures.</string>
+</resources>
