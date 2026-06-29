@@ -22,7 +22,13 @@ data class WeatherForecast(
     val h3: Int,
     val h4: Int,
     val timestamp: Long,
-    val isCached: Boolean = false
+    val isCached: Boolean = false,
+    val openMeteoSucceeded: Boolean = false,
+    val openMeteoError: String? = null,
+    val tomorrowSucceeded: Boolean = false,
+    val tomorrowError: String? = null,
+    val openWeatherSucceeded: Boolean = false,
+    val openWeatherError: String? = null
 )
 
 class WeatherRepository(
@@ -41,7 +47,7 @@ class WeatherRepository(
         val openMeteoDeferred = async {
             runCatching {
                 openMeteoApi.getForecast(latitude = lat, longitude = lon)
-            }.getOrNull()
+            }
         }
 
         val tomorrowDeferred = async {
@@ -49,7 +55,7 @@ class WeatherRepository(
                 val apiKey = BuildConfig.TOMORROW_IO_KEY
                 if (apiKey.isBlank()) throw IllegalStateException("Clé Tomorrow.io manquante")
                 tomorrowApi.getForecast(location = "$lat,$lon", apiKey = apiKey)
-            }.getOrNull()
+            }
         }
 
         val openWeatherDeferred = async {
@@ -57,12 +63,16 @@ class WeatherRepository(
                 val apiKey = BuildConfig.OPEN_WEATHER_KEY
                 if (apiKey.isBlank()) throw IllegalStateException("Clé OpenWeatherMap One Call manquante")
                 openWeatherApi.getForecast(latitude = lat, longitude = lon, apiKey = apiKey)
-            }.getOrNull()
+            }
         }
 
-        val openMeteoRes = openMeteoDeferred.await()
-        val tomorrowRes = tomorrowDeferred.await()
-        val openWeatherRes = openWeatherDeferred.await()
+        val openMeteoResult = openMeteoDeferred.await()
+        val tomorrowResult = tomorrowDeferred.await()
+        val openWeatherResult = openWeatherDeferred.await()
+
+        val openMeteoRes = openMeteoResult.getOrNull()
+        val tomorrowRes = tomorrowResult.getOrNull()
+        val openWeatherRes = openWeatherResult.getOrNull()
 
         // Calculer les tranches de 60 minutes glissantes relatives (0-60, 61-120, 121-180, 181-240)
         val nowMs = System.currentTimeMillis()
@@ -101,7 +111,13 @@ class WeatherRepository(
                 h2 = h2Val,
                 h3 = h3Val,
                 h4 = h4Val,
-                timestamp = nowMs
+                timestamp = nowMs,
+                openMeteoSucceeded = openMeteoResult.isSuccess,
+                openMeteoError = openMeteoResult.exceptionOrNull()?.localizedMessage,
+                tomorrowSucceeded = tomorrowResult.isSuccess,
+                tomorrowError = tomorrowResult.exceptionOrNull()?.localizedMessage,
+                openWeatherSucceeded = openWeatherResult.isSuccess,
+                openWeatherError = openWeatherResult.exceptionOrNull()?.localizedMessage
             )
             saveToCache(forecast)
             Result.success(forecast)
@@ -193,7 +209,7 @@ class WeatherRepository(
     }
 
     private fun findClosestOpenWeather(targetMs: Long, response: OpenWeatherResponse): Double? {
-        val items = response.hourly
+        val items = response.data
         var closestVal: Double? = null
         var minDiff = Long.MAX_VALUE
 
@@ -219,6 +235,9 @@ class WeatherRepository(
             .putInt("cached_h3", forecast.h3)
             .putInt("cached_h4", forecast.h4)
             .putLong("cached_timestamp", forecast.timestamp)
+            .putBoolean("cached_open_meteo_success", forecast.openMeteoSucceeded)
+            .putBoolean("cached_tomorrow_success", forecast.tomorrowSucceeded)
+            .putBoolean("cached_open_weather_success", forecast.openWeatherSucceeded)
             .apply()
     }
 
@@ -230,7 +249,10 @@ class WeatherRepository(
             h3 = prefs.getInt("cached_h3", 0),
             h4 = prefs.getInt("cached_h4", 0),
             timestamp = prefs.getLong("cached_timestamp", 0),
-            isCached = true
+            isCached = true,
+            openMeteoSucceeded = prefs.getBoolean("cached_open_meteo_success", false),
+            tomorrowSucceeded = prefs.getBoolean("cached_tomorrow_success", false),
+            openWeatherSucceeded = prefs.getBoolean("cached_open_weather_success", false)
         )
     }
 

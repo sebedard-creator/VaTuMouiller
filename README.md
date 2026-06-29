@@ -82,9 +82,9 @@ Pour compiler et faire fonctionner les requêtes réseau de l'application, vous 
 *   **Tomorrow.io** :
     1. Créez un compte gratuit sur le [Tableau de bord Tomorrow.io](https://app.tomorrow.io/signup).
     2. Copiez votre clé d'API secrète depuis l'onglet API de votre console.
-*   **OpenWeatherMap** (One Call API 3.0) :
+*   **OpenWeatherMap** (One Call API 4.0) :
     1. Inscrivez-vous sur le site [OpenWeatherMap Sign Up](https://home.openweathermap.org/users/sign_up).
-    2. Souscrivez à l'abonnement "One Call by Call 3.0" (les 1 000 premières requêtes quotidiennes sont gratuites).
+    2. Souscrivez à l'abonnement "One Call by Call 4.0" (les 1 000 premières requêtes quotidiennes sont gratuites).
     3. Configurez un seuil de blocage quotidien de "1000" appels dans votre tableau de bord financier pour garantir la gratuité absolue et bloquer tout dépassement.
     4. Récupérez votre clé d'API générée.
 *   **Open-Meteo** :

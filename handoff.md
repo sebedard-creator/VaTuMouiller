@@ -24,9 +24,9 @@ Ce document résume le travail accompli, l'état actuel du projet, et définit l
 
 ## 2. État actuel
 *   **Statut** : Le projet compile, s'installe et s'exécute parfaitement.
-*   **DebugActivity** : S'ouvre sans planter, gère les permissions GPS en direct, déclenche avec succès les requêtes réseau et met à jour le cache local.
+*   **DebugActivity** : Affiche un panneau complet gérant les permissions GPS, déclenchant les requêtes et affichant désormais le statut de réussite/échec et l'erreur système exacte pour chacun des 3 services météo testés.
 *   **Widget Glance** : Se charge et s'affiche sans erreur sur Nova Launcher. Les prévisions horaires H+1 à H+4 s'adaptent dynamiquement à la taille du widget (2x1, 3x1, 4x1) et grossissent pour remplir l'espace.
-*   **API OpenWeatherMap** : Renvoie actuellement une erreur `401` temporaire (en attente de l'activation finale de la clé One Call sous 2 heures par leur système), mais est absorbée sans problème par notre logique de consensus sur Tomorrow.io et Open-Meteo.
+*   **API OpenWeatherMap** : Migrée vers la version 4.0 (`data/4.0/onecall/timeline/1h`). Les nouvelles clés souscrites sur l'abonnement "One Call API 4.0" sont désormais prises en charge.
 
 ---
 

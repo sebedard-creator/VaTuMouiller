@@ -116,52 +116,43 @@ class WeatherWidget : GlanceAppWidget() {
                     .padding(paddingVal)
             ) {
                 if (cachedForecast != null) {
-                    Box(
-                        modifier = GlanceModifier.fillMaxSize()
+                    Column(
+                        modifier = GlanceModifier.fillMaxSize(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        // Box 1 : Centre la ligne des prévisions
-                        Box(
-                            modifier = GlanceModifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
+                        Row(
+                            modifier = GlanceModifier.fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Row(
-                                modifier = GlanceModifier.fillMaxWidth(),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                HourForecastItem("H+1", cachedForecast.h1, primaryTextColor, accentColor, labelSize, valueSize)
-                                Spacer(modifier = GlanceModifier.width(colSpacing))
-                                HourForecastItem("H+2", cachedForecast.h2, primaryTextColor, accentColor, labelSize, valueSize)
-                                Spacer(modifier = GlanceModifier.width(colSpacing))
-                                HourForecastItem("H+3", cachedForecast.h3, primaryTextColor, accentColor, labelSize, valueSize)
+                            HourForecastItem("H+1", cachedForecast.h1, primaryTextColor, accentColor, labelSize, valueSize)
+                            Spacer(modifier = GlanceModifier.width(colSpacing))
+                            HourForecastItem("H+2", cachedForecast.h2, primaryTextColor, accentColor, labelSize, valueSize)
+                            Spacer(modifier = GlanceModifier.width(colSpacing))
+                            HourForecastItem("H+3", cachedForecast.h3, primaryTextColor, accentColor, labelSize, valueSize)
 
-                                if (width >= 220.dp) {
-                                    Spacer(modifier = GlanceModifier.width(colSpacing))
-                                    HourForecastItem("H+4", cachedForecast.h4, primaryTextColor, accentColor, labelSize, valueSize)
-                                }
+                            if (width >= 220.dp) {
+                                Spacer(modifier = GlanceModifier.width(colSpacing))
+                                HourForecastItem("H+4", cachedForecast.h4, primaryTextColor, accentColor, labelSize, valueSize)
                             }
                         }
 
-                        // Box 2 : Aligne le bas de page tout en bas
                         if (height >= 38.dp) {
-                            Box(
-                                modifier = GlanceModifier.fillMaxSize(),
-                                contentAlignment = Alignment.BottomCenter
-                            ) {
-                                val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
-                                val timeStr = sdf.format(Date(cachedForecast.timestamp))
-                                val cacheAgeMs = System.currentTimeMillis() - cachedForecast.timestamp
-                                val isStale = cacheAgeMs > 40 * 60 * 1000 // Plus de 40 minutes
-                                val footerText = if (isStale) "Mis à jour à $timeStr (Cache)" else "Mis à jour à $timeStr"
+                            Spacer(modifier = GlanceModifier.height(1.dp))
+                            val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
+                            val timeStr = sdf.format(Date(cachedForecast.timestamp))
+                            val cacheAgeMs = System.currentTimeMillis() - cachedForecast.timestamp
+                            val isStale = cacheAgeMs > 40 * 60 * 1000 // Plus de 40 minutes
+                            val footerText = if (isStale) "Mis à jour à $timeStr (Cache)" else "Mis à jour à $timeStr"
 
-                                Text(
-                                    text = footerText,
-                                    style = TextStyle(
-                                        color = secondaryTextColor,
-                                        fontSize = if (isWide) 8.sp else 7.sp
-                                    )
+                            Text(
+                                text = footerText,
+                                style = TextStyle(
+                                    color = secondaryTextColor,
+                                    fontSize = if (isWide) 8.sp else 7.sp
                                 )
-                            }
+                            )
                         }
                     }
                 } else {
@@ -205,8 +196,7 @@ class WeatherWidget : GlanceAppWidget() {
                 text = "$probability%",
                 style = TextStyle(
                     color = if (probability > 30) accentColor else textColor,
-                    fontSize = valueSize,
-                    fontWeight = FontWeight.Bold
+                    fontSize = valueSize
                 )
             )
         }

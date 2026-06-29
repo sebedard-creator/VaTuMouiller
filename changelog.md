@@ -29,6 +29,12 @@ Toutes les modifications notables apportées à ce projet seront consignées dan
 - Suppression du libellé d'en-tête "Pluie (Consensus)" sur le widget pour libérer de l'espace vertical.
 - Implémentation du rendu réactif (`LocalSize.current` + `SizeMode.Exact`) sur le widget : si le widget est au format large 4x1 (largeur >= 250dp), la taille des textes grossit significativement (pourcentage à 28sp, labels à 13sp) et affiche l'heure H+4 pour remplir harmonieusement l'espace. De plus, les dimensions se réduisent intelligemment en hauteur (isTall) pour éviter le clipping vertical des textes de mise à jour (HH:mm) dans les cellules minces (57dp de hauteur).
 - Ajout d'une fonctionnalité d'opacité ajustable du fond du widget : introduction d'un composant `SeekBar` (slider) dans l'interface de l'application, persistance de la valeur dans `SharedPreferences` et redessinage en temps réel du widget via `GlanceAppWidgetManager` lors du glissement.
+- Mise à jour de l'API OpenWeatherMap de la version 3.0 à la version 4.0 (timeline/1h) pour supporter les abonnements "One Call API 4.0" des nouveaux comptes développeurs.
+- Ajout de retours visuels détaillés (succès/échecs et messages d'erreur système) pour chacun des 3 services météo dans le panneau de débogage de l'application.
+- Correction d'une erreur HTTP 400 sur Open-Meteo en supprimant le paramètre restrictif `models=gem_hrdps` (qui n'expose pas directement le champ `precipitation_probability` sur la grille brute et restreint l'usage hors Amérique du Nord) pour utiliser par défaut le mode intelligent `best_match` d'Open-Meteo.
+- Modification stylistique du widget : regroupement des prévisions et du footer "Mis à jour à" dans une même colonne centrée pour les rapprocher verticalement, et retrait de l'effet gras (`FontWeight.Bold`) sur le texte des pourcentages.
+
+
 
 
 

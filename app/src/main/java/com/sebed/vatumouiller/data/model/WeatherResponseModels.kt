@@ -42,7 +42,7 @@ data class TomorrowValues(
 // --- OpenWeatherMap One Call ---
 @Serializable
 data class OpenWeatherResponse(
-    val hourly: List<OpenWeatherHourlyItem>
+    val data: List<OpenWeatherHourlyItem>
 )
 
 @Serializable

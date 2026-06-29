@@ -166,11 +166,16 @@ class DebugActivity : AppCompatActivity() {
                     val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
                     val timeStr = sdf.format(Date(forecast.timestamp))
                     log("--- SUCCÈS ---")
+                    log("Statut des services météo :")
+                    log("- Open-Meteo : ${if (forecast.openMeteoSucceeded) "✅ SUCCESS" else "❌ FAILED (${forecast.openMeteoError ?: "Inconnu"})"}")
+                    log("- Tomorrow.io : ${if (forecast.tomorrowSucceeded) "✅ SUCCESS" else "❌ FAILED (${forecast.tomorrowError ?: "Inconnu"})"}")
+                    log("- OpenWeatherMap : ${if (forecast.openWeatherSucceeded) "✅ SUCCESS" else "❌ FAILED (${forecast.openWeatherError ?: "Inconnu"})"}")
+                    log("----------------")
                     log("H+1 (Prochaine heure) : ${forecast.h1}% de précipitation")
                     log("H+2 (Dans 2h) : ${forecast.h2}% de précipitation")
                     log("H+3 (Dans 3h) : ${forecast.h3}% de précipitation")
                     log("H+4 (Dans 4h) : ${forecast.h4}% de précipitation")
-                    log("Source : ${if (forecast.isCached) "Cache" else "Réseau (Moyenne des 3 API)"}")
+                    log("Source : ${if (forecast.isCached) "Cache" else "Réseau (Moyenne des API fonctionnelles)"}")
                     log("Mis à jour à : $timeStr")
                 },
                 onFailure = { error ->

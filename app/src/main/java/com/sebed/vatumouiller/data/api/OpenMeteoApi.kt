@@ -10,7 +10,6 @@ interface OpenMeteoApi {
         @Query("latitude") latitude: Double,
         @Query("longitude") longitude: Double,
         @Query("hourly") hourly: String = "precipitation_probability",
-        @Query("models") models: String = "gem_hrdps",
         @Query("forecast_days") forecastDays: Int = 1,
         @Query("timezone") timezone: String = "auto"
     ): OpenMeteoResponse
